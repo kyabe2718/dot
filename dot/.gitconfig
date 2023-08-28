@@ -1,0 +1,29 @@
+[user]
+    name = kyabe2718
+    email = kyabetsu.3141@gmail.com
+
+[core]
+    editor = vim
+    autocrlf = input
+
+[color]
+    ui = auto
+
+[credential]
+    helper = cache --timeout=3600
+
+[push]
+    default = simple
+    recurseSubmodules = check
+
+[alias]
+    sgl = log --oneline --graph --all --decorate
+    sgld = log --graph --date=short
+    lg= log --graph --all --date=short --pretty=format:'  %C(red)%h %C(cyan)%ar %Cgreen%cn %C(magenta bold)%d%Creset\n\t%C(white ul)%s'
+    st = status
+    cm = commit
+    ch = checkout
+    cl = clone
+    br = branch
+    f = fetch
+    sbup = submodule update --init --recursive
