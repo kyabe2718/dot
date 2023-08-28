@@ -2,10 +2,13 @@
 /.**
 
 # white list
-!/dot/
 !/bin/
+!/dot/
+!/lib/
 !/tmux/
 !/vim/
+!/zsh/
+!/install.sh
 
 !/README.md
 !.gitignore
