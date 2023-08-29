@@ -1,7 +1,6 @@
 #! /usr/bin/env zsh
 # zmodload zsh/zprof # to profile
 
-set -u
 DOTFILES_HOME=$(cd $(dirname $(readlink -f $HOME/.zshrc))/..; pwd -P)
 export LANG=ja_JP.UTF-8
 export PATH=$HOME/.local/bin:$PATH
@@ -17,9 +16,18 @@ export PATH=$HOME/.local/bin:$PATH
 autoload -Uz compinit; compinit # Initialize completion. See zshcompsys(1) for more details.
 autoload -Uz colors; colors # colorsの使用
 
-if [ "${LSCOLORS:+}" = "" ]; then # if $LSCOLORS is not set or null string
-    export LSCOLORS=gxfxcxdxbxegedabagacad
-fi
+# ls colors
+case ${OSTYPE} in
+  darwin*)
+    if [ -z ${LSCOLORS} ]; then # if $LSCOLORS is not set or null string
+        export LSCOLORS=gxfxcxdxbxegedabagacad
+    fi
+    alias ls='ls -G'
+    ;;
+  linux*)
+    alias ls='ls --color=auto'
+    ;;
+esac
 
 # See zshoptions(1)
 setopt CORRECT # Try to correct the spelling of commands

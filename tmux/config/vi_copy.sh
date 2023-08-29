@@ -1,5 +1,4 @@
 #! /usr/bin/env bash
-set -eu
 
 # ---------- copy mode ----------
 tmux bind-key -T copy-mode-vi 'v' send-keys -X begin-selection

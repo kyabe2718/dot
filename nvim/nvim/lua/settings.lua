@@ -2,7 +2,6 @@ local set = vim.opt
 
 -- view
 set.number = true
-set.numberwidth = 4
 set.ruler  = true
 set.fileencoding = 'utf-8'
 set.wrap = false

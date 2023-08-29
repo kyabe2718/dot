@@ -1,5 +1,4 @@
 #! /usr/bin/env bash
-set -eu
 
 tmux set-option -g status-interval 15 # update rate of the status line
 

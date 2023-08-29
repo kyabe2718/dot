@@ -8,5 +8,5 @@ if !(type nvim > /dev/null 2>&1) ; then
     chmod u+x $HOME/.local/bin/nvim
 fi
 
-# ln -sfv $SCRIPT_DIR/nvim ${XDG_CONFIG_HOME:-"$HOME/.config"}
+ln -sfv $SCRIPT_DIR/nvim ${XDG_CONFIG_HOME:-"$HOME/.config"}
 
