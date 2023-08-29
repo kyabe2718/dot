@@ -7,6 +7,7 @@
 !/lib/
 !/tmux/
 !/vim/
+!/nvim/
 !/zsh/
 !/install.sh
 
