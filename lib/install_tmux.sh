@@ -17,6 +17,7 @@ function install_tmux(){
     esac
 
     echo "Create Symlink..."
+    mkdir -p $HOME/.tmux
     ln -sfv $DOTFILES_HOME/tmux/config $HOME/.tmux/
 }
 

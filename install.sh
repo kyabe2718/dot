@@ -18,6 +18,7 @@ function main() {
     create_dot_symlink
 
     install_tmux
+    ${DOTFILES_HOME}/nvim/install_nvim.sh
 }
 
 echo $(get_dot_list)

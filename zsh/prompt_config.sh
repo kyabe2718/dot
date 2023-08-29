@@ -43,7 +43,7 @@ function +vi-git-config-user(){
 
 function set_prompt() {
     # sshかどうかでPROMPTの色を変える
-    [ "${SSH_TTY:+}" != "" ] && PCOLOR="cyan" || PCOLOR="green"
+    [ -z ${SSH_TTY:-} ] && PCOLOR="green" || PCOLOR="cyan"
     # case $KEYMAP in main|viins) KM="(INS)";; vicmd) KM="(NOR)";; esac
     PROMPT=" %* %F{cyan}[%~]
 %F{$PCOLOR}%n@%m%f%# "
