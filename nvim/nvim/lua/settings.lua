@@ -3,7 +3,7 @@ local set = vim.opt
 -- view
 set.number = true
 set.ruler  = true
-set.fileencoding = 'utf-8'
+-- set.fileencoding = 'utf-8'
 set.wrap = false
 set.errorbells = false
 

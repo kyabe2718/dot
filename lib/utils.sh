@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-function get_ostype() {
+get_ostype() {
     case "${OSTYPE}" in
         solaris*)   echo "SOLARIS" ;;
         linux-gnu*) echo "LINUX"   ;;
@@ -12,7 +12,7 @@ function get_ostype() {
     esac
 }
 
-function get_linux_distribution() {
+get_linux_distribution() {
     # c.f. https://unix.stackexchange.com/questions/6345/how-can-i-get-distribution-name-and-version-number-in-a-simple-shell-script
     if [ -f /etc/os-release ]; then
         # freedesktop.org and systemd
@@ -39,10 +39,17 @@ function get_linux_distribution() {
     fi
 }
 
-function get_platform() {
+get_platform() {
     case "$(get_ostype)" in
         LINUX) echo $(get_linux_distribution) ;;
         *)     echo $(get_ostype)             ;;
     esac
 }
 
+verlte() {
+    [  "$1" = "`echo -e \"$1\n$2\" | sort -V | head -n1`" ]
+}
+
+verlt() {
+    [ "$1" = "$2" ] && return 1 || verlte $1 $2
+}
