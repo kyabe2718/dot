@@ -12,7 +12,7 @@ setopt SHARE_HISTORY # 他のターミナルと共有
 
 # C-rで履歴検索
 function peco-select-history() {
-    RESULT=$(. $DOTFILES_HOME/bin/history_search.sh "$LBUFFER")
+    RESULT=$(. $DOTFILES_HOME/bin/popup_history_search.sh "$LBUFFER")
     if [ $? = 0 ]; then
         if [ ${#RESULT} != 0 ]; then # 検索結果が存在しなければ元の入力を保存
             CURSOR=${#RESULT} # ${#name}はname変数の文字数に置換される
