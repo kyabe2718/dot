@@ -43,13 +43,12 @@ function +vi-git-config-user(){
 
 function set_prompt() {
     # sshかどうかでPROMPTの色を変える
-    [ "${SSH_TTY}" != "" ] && PCOLOR="cyan" || PCOLOR="green"
+    [ "${SSH_TTY:+}" != "" ] && PCOLOR="cyan" || PCOLOR="green"
     # case $KEYMAP in main|viins) KM="(INS)";; vicmd) KM="(NOR)";; esac
-    PROMPT=" %* %F{cyan}[%~] $KM
+    PROMPT=" %* %F{cyan}[%~]
 %F{$PCOLOR}%n@%m%f%# "
     RPROMPT='%F{white}${vcs_info_msg_0_}'
 }
-
 set_prompt
 
 # function zle-line-init zle-keymap-select {

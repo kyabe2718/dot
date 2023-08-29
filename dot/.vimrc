@@ -18,6 +18,7 @@ call plug#begin()
     "   - Avoid using standard Vim directory names like 'plugin'
     " Plug 'hogehoge', { 'on': Command, 'for': filetype } "on-demand loading
 Plug 'dracula/vim'
+Plug 'williamboman/mason.nvim'
 call plug#end()
 
 set encoding=utf-8
@@ -83,7 +84,6 @@ if index(s:schemes, 'dracula') >= 0
 else
     colorscheme elflord
 endif
-
 set background=dark
 
 set smartindent

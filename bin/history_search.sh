@@ -1,7 +1,8 @@
 #! /usr/bin/env zsh
+set -eu
 
 function history_search() {
-    QUERY="$1"
+    QUERY=$1
     if type fzf > /dev/null 2>&1; then
         # RESULT=$(history -n -r 0 | awk '!a[$0]++' | fzf --layout=reverse --query "$QUERY")
         RESULT=$(history -n -r 0 | awk '!a[$0]++' | fzf-tmux -p 80% --layout=reverse --query "$QUERY")
@@ -14,5 +15,5 @@ function history_search() {
     return 0
 }
 
-history_search $@
+history_search "$@"
 

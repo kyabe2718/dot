@@ -1,4 +1,10 @@
+#! /usr/bin/env zsh
+# zmodload zsh/zprof # to profile
+
+set -u
 DOTFILES_HOME=$(cd $(dirname $(readlink -f $HOME/.zshrc))/..; pwd -P)
+export LANG=ja_JP.UTF-8
+export PATH=$HOME/.local/bin:$PATH
 
 # autoload ... [name]
 # Search the function from $FPATH and load it
@@ -11,10 +17,7 @@ DOTFILES_HOME=$(cd $(dirname $(readlink -f $HOME/.zshrc))/..; pwd -P)
 autoload -Uz compinit; compinit # Initialize completion. See zshcompsys(1) for more details.
 autoload -Uz colors; colors # colorsの使用
 
-export LANG=ja_JP.UTF-8 # 文字コードをutf-8に
-
-# if $LSCOLORS is not defined
-if [ -z $LSCOLORS ]; then
+if [ "${LSCOLORS:+}" = "" ]; then # if $LSCOLORS is not set or null string
     export LSCOLORS=gxfxcxdxbxegedabagacad
 fi
 
@@ -33,11 +36,10 @@ source $DOTFILES_HOME/zsh/prompt_config.sh
 source $DOTFILES_HOME/zsh/completion_config.sh
 source $DOTFILES_HOME/zsh/vi_copy_paste.sh
 
-# install zsh-vi-mode
-if [ ! -d $HOME/.local/share/zsh-vi-mode ]; then
-    git clone https://github.com/jeffreytse/zsh-vi-mode.git $HOME/.local/share/zsh-vi-mode
-fi
-source $HOME/.local/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+# if [ ! -d $HOME/.local/share/zsh-vi-mode ]; then
+#     git clone https://github.com/jeffreytse/zsh-vi-mode.git $HOME/.local/share/zsh-vi-mode
+# fi
+# source $HOME/.local/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 
 for f in $HOME/.shellrc.??*; do
     source $f
@@ -47,9 +49,4 @@ if [ -e $HOME/.zshrc.local ]; then
     source $HOME/.zshrc.local
 fi
 
-#-----------------------------------------------------------
-# 参考
-#-----------------------------------------------------------
-# http://post.simplie.jp/posts/60
-# man zshmodule
-# man zshcontrib
+# zprof # to profile
