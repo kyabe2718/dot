@@ -43,7 +43,6 @@ set.splitbelow = true
 set.splitright = true
 
 -- colorscheme
--- vim.cmd.colorscheme('elflord')
 set.termguicolors = true
 set.background = 'dark'
 -- vim.cmd.colorscheme('elflord')
@@ -51,5 +50,5 @@ vim.cmd.colorscheme('melange')
 
 -- others
 set.backspace = {'indent', 'eol', 'start'}
-set.clipboard:append({unnamedplus=true})
-set.mouse = 'a'
+set.clipboard:append({'unnamedplus'})
+set.mouse = 'a' -- enable mouse for all modes

@@ -22,8 +22,14 @@ require('lazy').setup({
     'nvim-tree/nvim-tree.lua', -- File Explorer
     'nvim-tree/nvim-web-devicons', --
 
+    {
+        'nvim-telescope/telescope.nvim', tag = '0.1.2',
+        dependencies = { 'nvim-lua/plenary.nvim' }
+    },
+
     -- colorscheme --
-     "savq/melange-nvim",
+    'savq/melange-nvim',
+    'EdenEast/nightfox.nvim',
 })
 
 vim.g.loaded_netrw = 1
