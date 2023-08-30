@@ -1,15 +1,1 @@
-/*
-/.**
 
-# white list
-!/bin/
-!/dot/
-!/lib/
-!/tmux/
-!/vim/
-!/nvim/
-!/zsh/
-!/install.sh
-
-!/README.md
-!.gitignore

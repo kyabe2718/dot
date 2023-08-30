@@ -18,7 +18,7 @@ vim.keymap.set('n', ';', ':')
 vim.keymap.set('v', ';', ':')
 
 vim.keymap.set('n', 'gl', 'gt')
-vim.keymap.set('v', 'gh', 'gT')
+vim.keymap.set('n', 'gh', 'gT')
 
 -- lsp
 vim.api.nvim_create_autocmd('LspAttach', {

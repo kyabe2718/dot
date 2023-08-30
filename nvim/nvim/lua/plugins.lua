@@ -39,6 +39,9 @@ require('nvim-tree').setup({
     view = {
         number = true
     },
+    tab = {
+        sync = { open = true, close = true }
+    },
     on_attach = function (buf)
         local api = require ('nvim-tree.api')
         local function opts(desc)
@@ -49,6 +52,25 @@ require('nvim-tree').setup({
 
         -- custom mapping
         vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
+        local function open_edit_or_tab ()
+            local wins = vim.api.nvim_tabpage_list_wins(0)
+            local cwin = vim.api.nvim_get_current_win()
+            for i = 1, #wins do
+                if wins[i] ~= cwin then -- not eqaul
+                    local b = vim.api.nvim_win_get_buf(wins[i])
+                    local name = vim.api.nvim_buf_get_name(b)
+                    if string.len(name) ~= 0 then
+                        -- Open in new tab if non-empty window exists
+                        api.node.open.tab()
+                        return
+                    end
+                end
+            end
+            -- Open in current tab if all windows are empty
+            api.node.open.edit()
+        end
+        -- -- vim.keymap.set('n', '<CR>', api.node.open.tab, opts('Open: New Tab'))
+        vim.keymap.set('n', '<CR>', open_edit_or_tab, opts('Open: Current or New Tab'))
     end,
 })
 vim.keymap.set('n', '<A-1>', '<cmd>:NvimTreeToggle<CR>')

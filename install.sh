@@ -8,11 +8,6 @@ echo "DOTFILES_HOME: ${DOTFILES_HOME}"
 source ${DOTFILES_HOME}/lib/link_dot.sh
 
 function main() {
-    # while [[ $# -gt 0 ]]; do
-    #     case $1 in
-    #     esac
-    # done
-
     backup_dot
     create_dot_symlink
 
