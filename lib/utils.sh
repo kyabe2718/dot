@@ -2,13 +2,13 @@
 
 get_ostype() {
     case "${OSTYPE}" in
-        solaris*)   echo "SOLARIS" ;;
-        linux-gnu*) echo "LINUX"   ;;
-        darwin*)    echo "OSX"     ;;
-        bsd*)       echo "BSD"     ;;
-        msys*)      echo "WINDOWS" ;;
-        cygwin*)    echo "WINDOWS" ;;
-        *)          echo "UNKNOWN: ${OSTYPE}" ;;
+        solaris*)   echo "solaris" ;;
+        linux-gnu*) echo "linux"   ;;
+        darwin*)    echo "osx"     ;;
+        bsd*)       echo "bsd"     ;;
+        msys*)      echo "windows" ;;
+        cygwin*)    echo "windows" ;;
+        *)          echo "unknown: ${OSTYPE}" ;;
     esac
 }
 
@@ -17,23 +17,23 @@ get_linux_distribution() {
     if [ -f /etc/os-release ]; then
         # freedesktop.org and systemd
         . /etc/os-release
-        echo $NAME
+        echo $NAME | awk '{print tolower($0)}'
     elif type lsb_release >/dev/null 2>&1; then
         # linuxbase.org
-        echo $(lsb_release -si)
+        echo $(lsb_release -si) | awk '{print tolower($0)}'
     elif [ -f /etc/lsb-release ]; then
         # For some versions of Debian/Ubuntu without lsb_release command
         . /etc/lsb-release
-        echo $DISTRIB_ID
+        echo $DISTRIB_ID | awk '{print tolower($0)}'
     elif [ -f /etc/debian_version ]; then
         # Older Debian/Ubuntu/etc.
-        echo "Debian"
+        echo "debian"
     elif [ -f /etc/SuSe-release ]; then
         # Older SuSE/etc.
-        echo "SuSE"
+        echo "suse"
     elif [ -f /etc/redhat-release ]; then
         # Older Red Hat, CentOS, etc.
-        echo "RedHat"
+        echo "redhat"
     else
         echo $(uname -s)
     fi
@@ -41,7 +41,7 @@ get_linux_distribution() {
 
 get_platform() {
     case "$(get_ostype)" in
-        LINUX) echo $(get_linux_distribution) ;;
+        linux) echo $(get_linux_distribution) ;;
         *)     echo $(get_ostype)             ;;
     esac
 }
