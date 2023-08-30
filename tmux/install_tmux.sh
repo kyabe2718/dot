@@ -8,8 +8,15 @@ fi
 source $DOTFILES_HOME/lib/utils.sh
 
 function install_tmux() {
-    git clone https://github.com/tmux/tmux.git -b 3.3a $HOME/.cache/tmux
-    cd $HOME/.cache/tmux
+    if !(type pkg-config > /dev/null 2>&1); then
+        case "$(get_platform)" in
+            ubuntu) sudo apt install pkg-config ;;
+            *) echo "failed to install pkg-config: Unknown platform $(get_platform)" ;;
+        esac
+    fi
+    BUILD_DIR=/tmp/tmux
+    git clone https://github.com/tmux/tmux.git -b 3.3a $BUILD_DIR
+    cd $BUILD_DIR
     sh autogen.sh
     ./configure --prefix $HOME/.local && make install
 }
@@ -33,7 +40,7 @@ function check_tmux(){
 function main(){
     if !(check_tmux); then
         case "$(get_platform)" in
-            "Ubuntu") install_tmux ;;
+            ubuntu) install_tmux ;;
             *) echo "failed to install tmux: Unknown platform $(get_platform)" ;;
         esac
     fi
