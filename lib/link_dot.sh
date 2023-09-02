@@ -10,7 +10,21 @@ function get_dot_list() {
     echo $ret
 }
 
+function dry_run() {
+    for f in $(get_dot_list); do
+        if !([[ -e $HOME/$f ]] && diff ${DOTFILES_HOME}/dot/$f $HOME/$f > /dev/null 2>&1); then
+            return 1
+        fi
+    done
+    return 0
+}
+
 function backup_dot() {
+    if dry_run; then
+        echo "There are no difference..."
+        return
+    fi
+
     local backup_dir="${XDG_CACHE_HOME:-$HOME/.cache}/$(date "+%Y%m%d-%H%M%S")"
     echo "Backup current dotfiles to ${backup_dir}"
     mkdir -p ${backup_dir}
