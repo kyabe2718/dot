@@ -14,11 +14,14 @@ function main() {
         else
             height=$(tmux display -p "#{window_height}" | awk '{ print int(0.8 * $1) }' )
             width=$(tmux display -p "#{window_width}" | awk '{ print int(0.8 * $1) }' )
-            fifo_name="/tmp/fifo_$(tmux display -p "#{pane_id}")"
-            mkfifo $fifo_name
-            tmux display-popup -E -h $height -w $width "$DOTFILES_HOME/bin/history_search.sh $1 > $fifo_name" &
-            cat $fifo_name
-            rm $fifo_name
+            fifo_path="/tmp/fifo_$(tmux display -p "#{pane_id}")"
+            if [[ -e $fifo_path ]]; then
+                rm $fifo_path
+            fi
+            mkfifo $fifo_path
+            tmux display-popup -E -h $height -w $width "$DOTFILES_HOME/bin/history_search.sh $1 > $fifo_path" &
+            cat $fifo_path
+            rm $fifo_path
         fi
     else
         $DOTFILES_HOME/bin/history_search.sh "$1"
