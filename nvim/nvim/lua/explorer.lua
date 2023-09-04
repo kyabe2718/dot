@@ -42,8 +42,6 @@ require('nvim-tree').setup({
     end,
 })
 
-vim.keymap.set('n', '<A-1>', '<cmd>:NvimTreeToggle<CR>')
-
 -- Closes the explorer when all other windows are closed
 vim.api.nvim_create_augroup("file_explorer", {})
 vim.api.nvim_create_autocmd("QuitPre", {

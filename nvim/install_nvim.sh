@@ -22,3 +22,8 @@ fi
 
 ln -sfv $SCRIPT_DIR/nvim ${XDG_CONFIG_HOME:-"$HOME/.config"}
 
+
+copilot_vim_path="$HOME/.config/nvim/pack/github/start/copilot.vim"
+if [[ ! -e $copilot_vim_path ]]; then
+    git clone https://github.com/github/copilot.vim.git $copilot_vim_path
+fi

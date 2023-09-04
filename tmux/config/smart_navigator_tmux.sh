@@ -12,10 +12,10 @@ is_ssh="ps -o state= -o comm= -t '#{pane_tty}' \
 
 # :SmartWinCmdは端のwindowから更に移動しようとしたら、tmux select-paneを呼ぶ
 
-tmux bind-key h if-shell "$is_vim" "send-key \":SmartWinCmd h\n\"" "select-pane -L"
-tmux bind-key j if-shell "$is_vim" "send-key \":SmartWinCmd j\n\"" "select-pane -D"
-tmux bind-key k if-shell "$is_vim" "send-key \":SmartWinCmd k\n\"" "select-pane -U"
-tmux bind-key l if-shell "$is_vim" "send-key \":SmartWinCmd l\n\"" "select-pane -R"
+tmux bind-key h if-shell "$is_vim" "send-key \":silent SmartWinCmd h\n\"" "select-pane -L"
+tmux bind-key j if-shell "$is_vim" "send-key \":silent SmartWinCmd j\n\"" "select-pane -D"
+tmux bind-key k if-shell "$is_vim" "send-key \":silent SmartWinCmd k\n\"" "select-pane -U"
+tmux bind-key l if-shell "$is_vim" "send-key \":silent SmartWinCmd l\n\"" "select-pane -R"
 
 tmux bind-key -Troot  C-w if-shell "$is_vim" "send-key C-w" "switch-client -Tctrlw"
 tmux bind-key -Tctrlw h   "select-pane -L"

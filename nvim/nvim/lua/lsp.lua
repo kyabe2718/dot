@@ -15,7 +15,9 @@ require("mason-lspconfig").setup_handlers {
     -- and will be called for each installed server that doesn't have
     -- a dedicated handler.
     function (server_name) -- default handler (optional)
-        require("lspconfig")[server_name].setup {}
+        require("lspconfig")[server_name].setup {
+            capabilities = require('cmp_nvim_lsp').default_capabilities()
+        }
     end,
     -- -- Next, you can provide a dedicated handler for specific servers.
     -- -- For example, a handler override for the `rust_analyzer`:
@@ -45,22 +47,16 @@ cmp.setup({
 
 require('cmp_nvim_lsp').default_capabilities()
 
-vim.api.nvim_create_augroup('LspGroup', {})
-vim.api.nvim_create_autocmd('LspAttach', {
-    group = 'LspGroup',
-    callback = function(args)
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        local opts = { buffer = args.buf }
-
-        -- vim.keymap.set('n', 'K' , vim.lsp.buf.hover,            opts)
-        -- vim.keymap.set('n', 'gf', vim.lsp.buf.format,           opts)
-        -- vim.keymap.set('n', 'gi', vim.lsp.buf.implementation,   opts)
-        -- vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition() | <C-o><CR>', opts)
-        -- vim.keymap.set('n', 'gb', '<cmd>lua vim.lsp.buf.declaration()', opts)
-
-        -- vim.api.nvim_create_autocmd('CursorHold', {
-        --     group = 'LspGroup',
-        --     command = "lua vim.lsp.buf.hover()"
-        -- })
+local jump_lsp_newtab = function(name)
+    local handler = vim.lsp.handlers[name]
+    vim.lsp.handlers[name] = function(_, result, ctx, config)
+        -- print(vim.inspect(result))
+        return handler(_, result, ctx, config)
     end
-})
+end
+
+jump_lsp_newtab('textDocument/definition')
+jump_lsp_newtab('textDocument/declaration')
+jump_lsp_newtab('textDocument/typeDefinition')
+jump_lsp_newtab('textDocument/implementation')
+

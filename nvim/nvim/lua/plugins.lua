@@ -32,6 +32,9 @@ require('lazy').setup({
         dependencies = { 'nvim-lua/plenary.nvim', 'BurntSushi/ripgrep' }
     },
 
+    -- copilot
+    { 'github/copilot.vim', lazy=false },
+
     -- colorscheme --
     'savq/melange-nvim',
     'EdenEast/nightfox.nvim',
@@ -43,8 +46,4 @@ require('telescope').setup({
         ["<esc>"] = require('telescope.actions').close,
     },
 })
-local telescope_builtin = require('telescope.builtin')
-vim.keymap.set('n', '<C-f>f', telescope_builtin.find_files, {})
-vim.keymap.set('n', '<C-f>g', telescope_builtin.live_grep, {})
-vim.keymap.set('n', '<C-f>b', telescope_builtin.buffers, {})
 

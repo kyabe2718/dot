@@ -28,10 +28,10 @@ local smart_win_cmd = function(buf)
     local arg = buf.args
     if is_tmux() and contains({'h', 'j', 'k', 'l'}, arg) then
         if not try_to_move(arg) then
-            vim.cmd(string.format("silent !tmux select-pane -%s\n", hjkl2LDUR[arg]))
+            vim.cmd(string.format("!tmux select-pane -%s\n", hjkl2LDUR[arg]))
         end
     else
-        vim.cmd(string.format("silent wincmd %s\n", arg))
+        vim.cmd(string.format("wincmd %s\n", arg))
     end
 end
 
