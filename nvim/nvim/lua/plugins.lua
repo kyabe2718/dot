@@ -16,8 +16,13 @@ require('lazy').setup({
     'neovim/nvim-lspconfig', -- configs for the Nvim LSP client
     'williamboman/mason.nvim', -- easy editor tool manager
     'williamboman/mason-lspconfig.nvim', -- closes gaps between mason.nvim and nvim-lspconfig
-    'hrsh7th/nvim-cmp', -- Autocompletion plugin
-    'hrsh7th/cmp-nvim-lsp', -- LSP source for nvim-cmp
+
+    'hrsh7th/nvim-cmp',     -- Autocompletion plugin
+    'hrsh7th/cmp-nvim-lsp', -- nvim-cmp source for lsp
+    'hrsh7th/cmp-buffer',   -- nvim-cmp source for buffer
+    'hrsh7th/cmp-path',     -- nvim-cmp source for filesystem paths
+    'hrsh7th/cmp-cmdline',  -- nvim-cmp source for vim cmdline
+    'hrsh7th/cmp-nvim-lua',  -- nvim-cmp source for neovim lua API
 
     'nvim-tree/nvim-tree.lua', -- File Explorer
     'nvim-tree/nvim-web-devicons', --

@@ -20,11 +20,4 @@ vim.keymap.set('v', ';', ':')
 vim.keymap.set('n', 'gl', 'gt')
 vim.keymap.set('n', 'gh', 'gT')
 
--- lsp
-vim.api.nvim_create_autocmd('LspAttach', {
-    callback = function(args)
-        -- print('LspAttach')
-        vim.keymap.set('n', 'gd', '<cmd>vim.lsp.buf.definition()<CR>', {buffer = args.buf})
-    end
-})
 
