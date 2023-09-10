@@ -27,8 +27,10 @@ require('lazy').setup({
     'nvim-tree/nvim-tree.lua', -- File Explorer
     'nvim-tree/nvim-web-devicons', --
 
-    {
-        'nvim-telescope/telescope.nvim', tag = '0.1.2',
+    'nvim-treesitter/nvim-treesitter',
+
+    { 'nvim-telescope/telescope.nvim',
+        tag = '0.1.2',
         dependencies = { 'nvim-lua/plenary.nvim', 'BurntSushi/ripgrep' }
     },
 
@@ -47,3 +49,15 @@ require('telescope').setup({
     },
 })
 
+
+require('nvim-treesitter.configs').setup({
+    ensure_installed = {'c', 'cpp', 'llvm', 'lua', 'vim', 'vimdoc', 'python'},
+    sync_install = false,
+    auto_install = true,
+    highlight = {
+        enable = true,
+    },
+    indent = {
+        enable = true,
+    },
+})
