@@ -13,7 +13,7 @@ function main() {
 
     ${DOTFILES_HOME}/tmux/install_tmux.sh
     ${DOTFILES_HOME}/nvim/install_nvim.sh
-    ${DOTFILES_HOME}/nvim/install_zsh.sh
+    ${DOTFILES_HOME}/zsh/install_zsh.sh
 }
 
 echo $(get_dot_list)
