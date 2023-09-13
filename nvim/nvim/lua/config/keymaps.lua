@@ -5,7 +5,7 @@
 vim.keymap.set('n', ';', ':')
 vim.keymap.set('v', ';', ':')
 
-vim.keymap.set('n', '<Esc><Esc>', ':nohlsearch<CR><Esc>')
+-- vim.keymap.set('n', '<Esc><Esc>', ':nohlsearch<CR>')
 
 vim.keymap.set('n', 'S-Left',  '<C-w><<CR>')
 vim.keymap.set('n', 'S-Right', '<C-w>><CR>')

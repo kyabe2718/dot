@@ -39,12 +39,30 @@ return {
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
         vim.keymap.set('n', 'gf', vim.lsp.buf.format, opts)
 
-        -- vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
-        --   group = 'lsp_group', pattern = { "*" },
-        --   callback = function()
-        --     vim.lsp.buf.format({ async = false })
-        --   end
-        -- })
+        local customize_handler = function(name)
+          -- c.f. :help lsp-handler
+          local handler = vim.lsp.handlers[name]
+          vim.lsp.handlers[name] = function(err, result, ctx, config)
+            config = config or {reuse_win = true}
+
+            local win = vim.api.nvim_get_current_win()
+            local prev_buf = vim.api.nvim_win_get_buf(win)
+            handler(err, result, ctx, config)
+            local curr_buf = vim.api.nvim_win_get_buf(win)
+
+            -- to show a target location in a new tab
+            -- default handler uses a current window if there is no buffer opening a target location
+            if prev_buf ~= curr_buf then
+              vim.api.nvim_win_set_buf(0, prev_buf)
+              vim.cmd.tabnew()
+              vim.api.nvim_win_set_buf(0, curr_buf)
+            end
+          end
+        end
+        customize_handler('textDocument/definition')
+        customize_handler('textDocument/declaration')
+        customize_handler('textDocument/typeDefinition')
+        customize_handler('textDocument/implementation')
       end
     })
   end

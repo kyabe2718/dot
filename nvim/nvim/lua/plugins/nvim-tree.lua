@@ -87,5 +87,4 @@ return {
     end
   },
   'nvim-tree/nvim-web-devicons',
-  -- 'nvim-treesitter/nvim-treesitter',
 }
