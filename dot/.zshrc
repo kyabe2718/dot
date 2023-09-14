@@ -65,5 +65,6 @@ source $DOTFILES_HOME/zsh/completion_config.sh
 source $DOTFILES_HOME/zsh/vi_copy_paste.sh
 
 [ -e $HOME/.zshrc.local ] &&  source $HOME/.zshrc.local
+[ -e $HOME/.env.sh ] &&  source $HOME/.env.sh
 
 # zprof # to profile
