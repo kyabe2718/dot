@@ -26,12 +26,14 @@ function tmux-select-pane() {
             esac
         elif [[ -n "$SSH_TTY" ]]; then
             echo "in ssh (remote)"
+            cmd=""
             case $1 in
-                -L) [ $(tmux display -p '#{pane_at_left}'   ) = 1 ] && echo "tmux select-pane -L" | nc localhost ${TMUX_REMOTE_PORT} || tmux select-pane -L ;;
-                -D) [ $(tmux display -p '#{pane_at_bottom}' ) = 1 ] && echo "tmux select-pane -D" | nc localhost ${TMUX_REMOTE_PORT} || tmux select-pane -D ;;
-                -U) [ $(tmux display -p '#{pane_at_top}'    ) = 1 ] && echo "tmux select-pane -U" | nc localhost ${TMUX_REMOTE_PORT} || tmux select-pane -U ;;
-                -R) [ $(tmux display -p '#{pane_at_right}'  ) = 1 ] && echo "tmux select-pane -R" | nc localhost ${TMUX_REMOTE_PORT} || tmux select-pane -R ;;
+                -L) [ $(tmux display -p '#{pane_at_left}'   ) = 1 ] && cmd="tmux select-pane -L" || tmux select-pane -L ;;
+                -D) [ $(tmux display -p '#{pane_at_bottom}' ) = 1 ] && cmd="tmux select-pane -D" || tmux select-pane -D ;;
+                -U) [ $(tmux display -p '#{pane_at_top}'    ) = 1 ] && cmd="tmux select-pane -U" || tmux select-pane -U ;;
+                -R) [ $(tmux display -p '#{pane_at_right}'  ) = 1 ] && cmd="tmux select-pane -R" || tmux select-pane -R ;;
             esac
+            echo $cmd | nc -N localhost ${TMUX_REMOTE_PORT}
         else
             tmux select-pane $1
         fi
@@ -47,9 +49,9 @@ function ssh(){
 }
 
 if [[ -n "$TMUX" ]]; then
-    # SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd -P)"
-    # tmux bind-key h run ". $SCRIPT_DIR/smart_navigator.sh"
-    # tmux bind-key j run ". $SCRIPT_DIR/smart_navigator.sh"
-    # tmux bind-key k run ". $SCRIPT_DIR/smart_navigator.sh"
-    # tmux bind-key l run ". $SCRIPT_DIR/smart_navigator.sh"
+    TMUX_REMOTE_PORT=9090
+    tmux bind-key h run "tmux send-prefix && tmux send-key h && eval \$(nc -l ${TMUX_REMOTE_PORT})"
+    tmux bind-key j run "tmux send-prefix && tmux send-key j && eval \$(nc -l ${TMUX_REMOTE_PORT})"
+    tmux bind-key k run "tmux send-prefix && tmux send-key k && eval \$(nc -l ${TMUX_REMOTE_PORT})"
+    tmux bind-key l run "tmux send-prefix && tmux send-key l && eval \$(nc -l ${TMUX_REMOTE_PORT})"
 fi
