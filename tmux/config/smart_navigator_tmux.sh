@@ -5,8 +5,8 @@
 #   T: stopped by job control signal (e.g., stopped by C-z)
 #   X: dead
 #   Z: zombie process)
-is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
-is_ssh="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?ssh$'"
+# is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+# is_ssh="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?ssh$'"
 
 # :SmartWinCmdは端のwindowから更に移動しようとしたら、tmux select-paneを呼ぶ
 # tmux bind-key h run "($is_vim && tmux send-key C-w h) || tmux select-pane -L"
