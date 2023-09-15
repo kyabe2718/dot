@@ -63,6 +63,7 @@ source $DOTFILES_HOME/zsh/history_config.sh
 source $DOTFILES_HOME/zsh/prompt_config.sh
 source $DOTFILES_HOME/zsh/completion_config.sh
 source $DOTFILES_HOME/zsh/vi_copy_paste.sh
+source $DOTFILES_HOME/zsh/smart_navigator.sh
 
 [ -e $HOME/.zshrc.local ] &&  source $HOME/.zshrc.local
 [ -e $HOME/.env.sh ] &&  source $HOME/.env.sh
