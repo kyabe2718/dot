@@ -1,13 +1,14 @@
 #! /usr/bin/env zsh
 
 function ssh(){
-    TMUX_REMOTE_PORT=9090
     if [ -z ${DOTFILES_HOME:+} ]; then
         DOTFILES_HOME=$(cd $(dirname $(readlink -f $0))/..; pwd -P)
     fi
-    tmux pipe-pane -o "${DOTFILES_HOME}/bin/tmux_select_pane.sh --listen"
-    /usr/bin/ssh -R ${TMUX_REMOTE_PORT}:localhost:${TMUX_REMOTE_PORT} $@
+    tmux pipe-pane "/usr/bin/zsh ${DOTFILES_HOME}/bin/tmux_select_pane.sh --listen"
+    sleep 1
+    /usr/bin/ssh $@
     tmux pipe-pane && tmux display-message "ssh exited"
+    # TMUX_REMOTE_PORT=9090 /usr/bin/ssh -R ${TMUX_REMOTE_PORT}:localhost:${TMUX_REMOTE_PORT} $@
 }
 
 if [[ "$1" == "" ]] && [[ -n "$TMUX" ]]; then
@@ -28,4 +29,5 @@ if [[ "$1" == "" ]] && [[ -n "$TMUX" ]]; then
     # tmux bind-key j run "/usr/bin/env zsh ${DOTFILES_HOME}/bin/tmux_select_pane.sh -d down  -p 9090 -l 9090"
     # tmux bind-key k run "/usr/bin/env zsh ${DOTFILES_HOME}/bin/tmux_select_pane.sh -d up    -p 9090 -l 9090"
     # tmux bind-key l run "/usr/bin/env zsh ${DOTFILES_HOME}/bin/tmux_select_pane.sh -d right -p 9090 -l 9090"
+
 fi

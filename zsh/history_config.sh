@@ -9,6 +9,8 @@ setopt HIST_IGNORE_DUPS # 重複を記録しない
 setopt EXTENDED_HISTORY # 開始と終了を記録
 setopt SHARE_HISTORY # 他のターミナルと共有
 
+export DOTFILES_HOME=$(cd $(dirname $(readlink -f $0))/..; pwd -P)
+
 # C-rで履歴検索
 function peco-select-history() {
     RESULT=$(. $DOTFILES_HOME/bin/popup_history_search.sh "$LBUFFER")

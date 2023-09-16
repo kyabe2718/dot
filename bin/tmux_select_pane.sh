@@ -65,25 +65,23 @@
 function tmux-select-pane() {
     local DIR=""
     local LISTEN=0
-    local TMUX_SELECT_PANE_LISTEN_PORT=""
     while [[ $# -gt 0 ]]; do
         case $1 in
             -d | --direction) shift; DIR=$1 ;;
-            -l | --listen) shift; LISTEN=1 ;;
+            -l | --listen) LISTEN=1 ;;
             -h | --help) echo "Usage: tmux-select-pane [-d direction] [-l]"; return 0 ;;
             *) echo "invalid argument: $1" && return 1 ;;
         esac
         shift
     done
 
-    [[ -z "$DIR" ]] && return 1
-
-    if [[ $LISTEN -eq 1 ]]; then
+    if [[ $LISTEN = 1 ]]; then
+        pane_id=$(tmux display -p '#{pane_id}')
         while read LINE; do
-            cmd = $(echo $LINE | sed -e "s/\033]5000;run;\(\)\a/\1/" | base64 -d)
-            if [[ -n "$cmd" ]]; then
-                echo $cmd
-                eval $cmd
+            echo $LINE >> $HOME/lines_${pane_id}.log
+            content= $(echo $LINE | sed -e "s/\033]\(\)\007/\1/g")
+            if [[ -n "$content" ]]; then
+                echo $content >> $HOME/content_${pane_id}.log
             fi
         done
         return 0
@@ -118,7 +116,7 @@ function tmux-select-pane() {
                 u|up)    [ $(tmux display -p '#{pane_at_top}'    ) = 1 ] && cmd="tmux select-pane -U" || tmux select-pane -U ;;
                 r|right) [ $(tmux display -p '#{pane_at_right}'  ) = 1 ] && cmd="tmux select-pane -R" || tmux select-pane -R ;;
             esac
-            [[ -n "$cmd" ]] && echo -en "\033]5000;run;$(base64 $cmd)\a" > $pane_tty
+            [[ -n "$cmd" ]] && echo -en "\ePtmux;\e\e]5000;$cmd\a\e\\" > $pane_tty
         else
             case $DIR in
                 l|left)  tmux select-pane -L ;;
@@ -133,4 +131,5 @@ function tmux-select-pane() {
     return 0
 }
 
+echo "$@" >> $HOME/log.log
 tmux-select-pane "$@"
