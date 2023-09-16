@@ -26,11 +26,6 @@ tmux bind-key -Tctrlw k   "select-pane -U"
 tmux bind-key -Tctrlw l   "select-pane -L"
 
 # ---------- ssh ----------
-tmux set-option -g focus-events on
-# 移動したpaneがsshを実行していたら、prefixを切り替える
-# tmux set-hook -g pane-focus-in "run \
-#   \"($is_ssh && (tmux set-option -g prefix C-a; tmux unbind-key C-b)) \
-#   || (tmux set-option -g prefix C-a; tmux unbind-key C-b)\""
 
 # tmux set-hook -g pane-focus-in "run \
 #   \"($is_ssh && (tmux set-option -g prefix C-b; tmux unbind-key C-a)) \
