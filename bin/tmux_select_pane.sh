@@ -77,13 +77,14 @@ function tmux-select-pane() {
 
     if [[ $LISTEN = 1 ]]; then
         pane_id=$(tmux display -p '#{pane_id}')
-        while read LINE; do
-            echo $LINE >> $HOME/lines_${pane_id}.log
-            content= $(echo $LINE | sed -e "s/\033]\(\)\007/\1/g")
-            if [[ -n "$content" ]]; then
-                echo $content >> $HOME/content_${pane_id}.log
-            fi
-        done
+        cat >> $HOME/lines_${pane_id}.log
+        # while read LINE; do
+        #     echo $LINE >> $HOME/lines_${pane_id}.log
+        #     content= $(echo $LINE | sed -e "s/\033]\(\)\007/\1/g")
+        #     if [[ -n "$content" ]]; then
+        #         echo $content >> $HOME/content_${pane_id}.log
+        #     fi
+        # done
         return 0
     fi
 
