@@ -107,7 +107,7 @@ function tmux-select-pane() {
                 u|up)    [ $(tmux display -p '#{pane_at_top}'    ) = 1 ] && cmd="select-pane -U" || tmux select-pane -U ;;
                 r|right) [ $(tmux display -p '#{pane_at_right}'  ) = 1 ] && cmd="select-pane -R" || tmux select-pane -R ;;
             esac
-            [[ -n "$cmd" ]] && $DOTFILES_HOME/bin/osc.sh --tmux "$cmd"
+            [[ -n "$cmd" ]] && $DOTFILES_HOME/bin/osc.sh --tmux "$cmd" > ${pane_tty}
         else
             case $DIR in
                 l|left)  tmux select-pane -L ;;

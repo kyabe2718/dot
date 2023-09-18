@@ -7,7 +7,8 @@ function ssh(){
     if [[ -z "$TMUX" ]]; then
         /usr/bin/ssh $@
     else
-        tmux pipe-pane "/usr/bin/bash ${DOTFILES_HOME}/bin/osc.sh --watch"
+        # tmux pipe-pane -o "cat >> /tmp/log.log | /usr/bin/bash ${DOTFILES_HOME}/bin/osc.sh --watch -"
+        tmux pipe-pane -o "cat >> /tmp/log.log"
         /usr/bin/ssh $@
         tmux pipe-pane && tmux display-message "ssh exited"
     fi
