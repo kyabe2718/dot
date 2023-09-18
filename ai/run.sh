@@ -16,9 +16,10 @@ run() {
     docker run \
         --mount type=bind,source=$PWD,target=/workspace \
         --env OPENAI_API_KEY=${OPENAI_API_KEY} \
-        --user $(id -u):$(id -g) \
-        --group-add sudo \
         -it --rm ${AI_IMAGE_NAME} "$@"
+
+        # --user $(id -u):$(id -g) \
+        # --group-add sudo \
 }
 
 main() {
