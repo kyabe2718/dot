@@ -52,7 +52,7 @@ function watch-osc() {
         local osc_num=$1; shift
         case $osc_num in
             51234) eval "tmux $(echo -n $@ | base64 -d)" ;;
-            *) echo "unknown osc[$osc_num]: $@" ;;
+            # *) echo "unknown osc[$osc_num]: $@" ;;
         esac
     }
 
@@ -84,7 +84,7 @@ function main() {
     done
 
     if [[ -n "$OSC_NUM" ]]; then
-        echo "$OSC_NUM" "$OSC_CONTENT"
+        # echo "$OSC_NUM" "$OSC_CONTENT"
         print_osc "$OSC_NUM" "$OSC_CONTENT"
     fi
 }
