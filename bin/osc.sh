@@ -28,7 +28,7 @@ function print_seq() {
 
 function print_osc() {
     local NUM="$1"; shift
-    print_seq $(printf '\x1B]%d;%s\x07' "$NUM" "$@") | cat -v
+    [[ "$DEBUG" = 1 ]] && (print_seq $(printf '\x1B]%d;%s\x07' "$NUM" "$@") | cat -v)
     print_seq $(printf '\x1B]%d;%s\x07' "$NUM" "$@")
 }
 
@@ -84,7 +84,7 @@ function main() {
     done
 
     if [[ -n "$OSC_NUM" ]]; then
-        # echo "$OSC_NUM" "$OSC_CONTENT"
+        [[ "$DEBUG" = 1 ]] && echo "$OSC_NUM" "$OSC_CONTENT"
         print_osc "$OSC_NUM" "$OSC_CONTENT"
     fi
 }
