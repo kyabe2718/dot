@@ -132,5 +132,5 @@ function tmux-select-pane() {
     return 0
 }
 
-echo "$@" >> $HOME/log.log
-tmux-select-pane "$@"
+# echo "$@" >> $HOME/log.log
+# tmux-select-pane "$@"

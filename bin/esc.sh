@@ -18,65 +18,93 @@ set -e
 
 function tmux_passthrough() {
     local seq=$(sed -e 's/\x1B/\x1B\x1B/g' <<< "$1")
-    printf '\033Ptmux;%s\033\\' "$seq"
+    printf '\x1BPtmux;%s\x1B\\' "$seq"
 }
 
 function print_seq() {
-    if [[ -n "$TMUX" ]]; then
-        echo "in tmux"
-        tmux_passthrough "$1"
-    else
-        echo "not in tmux"
-        printf '%s' "$1"
-    fi
+    [[ $DEBUG = 1 ]] && echo "tmux nest level: $NEST_TMUX_LEVEL"
+    local s="$1"
+    for i in $(seq 1 $NEST_TMUX_LEVEL); do
+        s=$(tmux_passthrough "$s")
+    done
+    [[ $DEBUG = 1 ]] && (echo -n "output: " > /dev/stderr; printf '%s' "$s" | cat -v > /dev/stderr)
+    printf '%s' "$s"
 }
 
 function usage() {
-    echo "Usage: hoge.sh [options]"
+    echo "Usage: esc.sh [options] [text]"
 }
 
 function set-title() {
-    echo "set title to $1"
+    [[ $DEBUG = 1 ]] && echo "set title to $1"
     local s=$(printf '\x1B]0;%s\a' "$1")
-    # print_seq $(print_seq "$s")
     print_seq "$s"
 }
 
 function copy-to-clipboard() {
-    echo "copy to clipboard: $1"
+    [[ $DEBUG = 1 ]] && echo "copy to clipboard: $1"
     local s=$(echo -n "$1" | base64 | tr -d '\n')
     local s=$(printf '\x1B]52;c;%s\a' "$s")
     print_seq "$s"
 }
 
-function rename() {
-    if [[ -n "$TMUX" ]]; then
-        printf '\x1Bk%s\a' "$1"
-    else
-        echo "failed to rename pane title: not in tmux"
+function window-rename() {
+    [[ $DEBUG = 1 ]] && echo "$NEST_TMUX_LEVEL"
+    if [[ $NEST_TMUX_LEVEL < 1 ]]; then
+        echo "failed to rename window title: not in tmux"
         exit 1
+    else
+        [[ $DEBUG = 1 ]] && echo "rename window title to $1"
+        NEST_TMUX_LEVEL=$((NEST_TMUX_LEVEL-1))
+        print_seq $(printf '\x1Bk%s\a' "$1")
     fi
 }
 
-function message-hogehoge() {
-    echo "unkoooo"
-    tmux set -g user-keys[0] '\x1B]foobar'
-    tmux bind-key -Troot User0 display-message "hogehoge"
-    # local s='\x1B]5000;hogehoge\a'
-    # print_seq "$s"
+function extract_osc() {
+
+    # sed -n 's/.../.../p' # マッチした行のみ出力
+
+    PATTERN='\x1B]\([0-9]*\);\(.*\)\x07'
+    for i in $(seq 1 $NEST_TMUX_LEVEL); do
+        PATTERN='\x1BPtmux;'$(sed -e 's/\\x1B/\\x1B\\x1B/g' <<< "$PATTERN")'\x1B\\'
+    done
+
+    function hoge() {
+        echo "NUMBER:  $1" | cat -v
+        echo $1 | od -x
+        echo "COMMAND: $2" | cat -v
+    }
+
+    SED=$(printf 's/%s/\\1 \"\\2\"\\n/p' "$PATTERN")
+    # cat "$1" | sed -n "$SED" | cat -v
+    cat "$1" | sed -n "$SED" | while read -r line; do
+        # echo "$line"
+        eval "hoge $line"
+    done
 }
 
 function main() {
+    [[ -n "$TMUX" ]] && NEST_TMUX_LEVEL=1 || NEST_TMUX_LEVEL=0
+    CMDS=()
+    DEBUG=0
     while [[ $# -gt 0 ]]; do
         case "$1" in
             -h|--help) usage; exit 0 ;;
-            -c|--copy)      shift; copy-to-clipboard "$@";      exit 0 ;;
-            -r|--rename)    shift; rename "$@";     exit 0 ;;
-            -t|--set-title) shift; set-title "$@";  exit 0 ;;
-            -m) message-hogehoge;  exit 0 ;;
+            -c|--copy)        shift; CMDS+=("copy-to-clipboard $1") ;;
+            -r|--rename)      shift; CMDS+=("window-rename $1")     ;;
+            -t|--set-title)   shift; CMDS+=("set-title $1")         ;;
+            --osc)            shift; CMDS+=("extract_osc $1")       ;;
+            --force-in-tmux)  NEST_TMUX_LEVEL=1                     ;;
+            --tmux-nest)      shift; NEST_TMUX_LEVEL="$1"           ;;
+            --debug)          DEBUG=1                       ;;
             *) echo "Invalid option: $1"; exit 1 ;;
         esac
         shift
+    done
+    [[ $DEBUG = 1 ]] && echo "NEST_TMUX_LEVEL: $NEST_TMUX_LEVEL"
+    for cmd in "${CMDS[@]}"; do
+        echo "cmd: $cmd"
+        eval "$cmd"
     done
 }
 
