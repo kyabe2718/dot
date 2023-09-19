@@ -1,4 +1,4 @@
-#! /usr/bin/env zsh
+#! /usr/bin/env bash
 
 # function tmux-select-pane() {
 #     local DIR=""
@@ -62,31 +62,21 @@
 #     return 0
 # }
 
+
+if [ -z ${DOTFILES_HOME:+} ]; then
+    DOTFILES_HOME=$(cd $(dirname $(readlink -f $0))/..; pwd -P)
+fi
+
 function tmux-select-pane() {
     local DIR=""
-    local LISTEN=0
     while [[ $# -gt 0 ]]; do
         case $1 in
             -d | --direction) shift; DIR=$1 ;;
-            -l | --listen) LISTEN=1 ;;
             -h | --help) echo "Usage: tmux-select-pane [-d direction] [-l]"; return 0 ;;
             *) echo "invalid argument: $1" && return 1 ;;
         esac
         shift
     done
-
-    if [[ $LISTEN = 1 ]]; then
-        pane_id=$(tmux display -p '#{pane_id}')
-        cat >> $HOME/lines_${pane_id}.log
-        # while read LINE; do
-        #     echo $LINE >> $HOME/lines_${pane_id}.log
-        #     content= $(echo $LINE | sed -e "s/\033]\(\)\007/\1/g")
-        #     if [[ -n "$content" ]]; then
-        #         echo $content >> $HOME/content_${pane_id}.log
-        #     fi
-        # done
-        return 0
-    fi
 
     pane_tty=$(tmux display -p '#{pane_tty}')
     if [[ -n "$TMUX" ]]; then
@@ -100,24 +90,24 @@ function tmux-select-pane() {
                 u|up)    tmux send-key C-w k ;;
                 r|right) tmux send-key C-w l ;;
             esac
-        elif eval "$is_ssh"; then
-            # tmux display "in ssh (local)"
-            case $DIR in
-                l|left)  tmux send-prefix && tmux send-key h ;;
-                d|down)  tmux send-prefix && tmux send-key j ;;
-                u|up)    tmux send-prefix && tmux send-key k ;;
-                r|right) tmux send-prefix && tmux send-key l ;;
-            esac
+        # elif eval "$is_ssh"; then
+        #     # tmux display "in ssh (local)"
+        #     case $DIR in
+        #         l|left)  tmux send-prefix && tmux send-key h ;;
+        #         d|down)  tmux send-prefix && tmux send-key j ;;
+        #         u|up)    tmux send-prefix && tmux send-key k ;;
+        #         r|right) tmux send-prefix && tmux send-key l ;;
+        #     esac
         elif [[ -n "$SSH_TTY" ]]; then
             # tmux display "in ssh (remote)"
             cmd=""
             case $DIR in
-                l|left)  [ $(tmux display -p '#{pane_at_left}'   ) = 1 ] && cmd="tmux select-pane -L" || tmux select-pane -L ;;
-                d|down)  [ $(tmux display -p '#{pane_at_bottom}' ) = 1 ] && cmd="tmux select-pane -D" || tmux select-pane -D ;;
-                u|up)    [ $(tmux display -p '#{pane_at_top}'    ) = 1 ] && cmd="tmux select-pane -U" || tmux select-pane -U ;;
-                r|right) [ $(tmux display -p '#{pane_at_right}'  ) = 1 ] && cmd="tmux select-pane -R" || tmux select-pane -R ;;
+                l|left)  [ $(tmux display -p '#{pane_at_left}'   ) = 1 ] && cmd="select-pane -L" || tmux select-pane -L ;;
+                d|down)  [ $(tmux display -p '#{pane_at_bottom}' ) = 1 ] && cmd="select-pane -D" || tmux select-pane -D ;;
+                u|up)    [ $(tmux display -p '#{pane_at_top}'    ) = 1 ] && cmd="select-pane -U" || tmux select-pane -U ;;
+                r|right) [ $(tmux display -p '#{pane_at_right}'  ) = 1 ] && cmd="select-pane -R" || tmux select-pane -R ;;
             esac
-            [[ -n "$cmd" ]] && echo -en "\ePtmux;\e\e]5000;$cmd\a\e\\" > $pane_tty
+            [[ -n "$cmd" ]] && $DOTFILES_HOME/bin/osc.sh --tmux "$cmd" > ${pane_tty}
         else
             case $DIR in
                 l|left)  tmux select-pane -L ;;
@@ -132,5 +122,5 @@ function tmux-select-pane() {
     return 0
 }
 
-# echo "$@" >> $HOME/log.log
-# tmux-select-pane "$@"
+tmux-select-pane "$@"
+
