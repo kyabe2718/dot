@@ -25,4 +25,4 @@ WORKDIR /workspace
 ENTRYPOINT ["/entrypoint.sh"]
 
 # use gpt-3.5-turbo
-CMD ["/bin/bash"]
+# CMD ["/bin/bash"]

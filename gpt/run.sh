@@ -1,30 +1,41 @@
 #! /usr/bin/env bash
 
 AI_IMAGE_NAME=ai:latest
+CONTAINER_NAME="ai"
 SCRIPT_DIR=$(cd $(dirname $(readlink -f $0)); pwd -P)
 
 build() {
-    docker build -t ${AI_IMAGE_NAME} ${SCRIPT_DIR}
+  docker build -t ${AI_IMAGE_NAME} ${SCRIPT_DIR}
 }
 
 clean() {
-    docker rmi ${AI_IMAGE_NAME}
+  docker rmi ${AI_IMAGE_NAME}
+}
+
+stop() {
+  docker stop --signal sigint ${CONTAINER_NAME}
 }
 
 run() {
-    docker run \
-        $MOUNT \
-        --env OPENAI_API_KEY=${OPENAI_API_KEY} \
-        --user $USER \
-        --group-add sudo \
-        -it --rm ${AI_IMAGE_NAME} $@
+  [ -z "$(docker images -q ${AI_IMAGE_NAME})" ] && build
+
+  if !(docker container ls -a -q --filter name=${CONTAINER_NAME} | grep -q .); then
+    docker run $MOUNT \
+      --user $USER --group-add sudo \
+      --name ${CONTAINER_NAME} --detach \
+      ${AI_IMAGE_NAME} \
+      /bin/bash -c "while true; do sleep 10; done"
+  fi
+
+  (docker container ls -q --filter name=${CONTAINER_NAME} | grep -q .) ||\
+    docker start ${CONTAINER_NAME}
+
+  docker exec \
+    --env OPENAI_API_KEY=${OPENAI_API_KEY} \
+    --user $USER -it ${CONTAINER_NAME} $@
 }
 
 main() {
-    if [ -z "$(docker images -q ${AI_IMAGE_NAME})" ]; then
-        build
-    fi
-
     cmd="chatgpt-cli"; args=""
     MOUNT="--mount type=bind,source=$PWD,target=/workspace"
     USER="user"
@@ -32,6 +43,7 @@ main() {
         case "$1" in
             -h|--help)  usage; exit 0 ;;
             -b|--build) build; exit 0 ;;
+            --stop)     stop;  exit 0 ;;
             --clean)    clean; exit 0 ;;
             --cmd)      shift; cmd="$1";;
             --root)     USER="root";;
@@ -47,7 +59,6 @@ main() {
         esac
         shift
     done
-    # echo "$cmd$args"
     run "$cmd$args"
 }
 
@@ -65,6 +76,8 @@ Usage: $(basename $0) [OPTIONS] [--] [ARGS...]
   --cmd CMD             Command to run in docker container.
   -b, --build           Build docker image.
   --clean               Clean docker image.
+  --stop                Stop docker container.
+  --                    Pass the remaining arguments to the command.
 EOF
 }
 

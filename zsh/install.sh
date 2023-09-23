@@ -12,8 +12,9 @@ function main() {
     fi
     case "$(get_platform)" in
         ubuntu) sudo apt install -y zsh ;;
-        *) echo "failed to install tmux: Unknown platform $(get_platform)" ;;
+        *) echo "failed to install tmux: Unknown platform $(get_platform)"; exit 1 ;;
     esac
+    chsh -s $(which zsh)
 }
 
 main

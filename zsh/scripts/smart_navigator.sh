@@ -1,9 +1,6 @@
 #! /usr/bin/env zsh
 
 function ssh(){
-    if [[ -z "${DOTFILES_HOME}" ]]; then
-        DOTFILES_HOME=$(cd $(dirname $(readlink -f $0))/..; pwd -P)
-    fi
     if [[ -z "$TMUX" ]]; then
         /usr/bin/ssh $@
     else

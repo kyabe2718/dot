@@ -1,8 +1,7 @@
 local M = {
   { "nvim-telescope/telescope-frecency.nvim", dependencies = { "kkharji/sqlite.lua" } },
   { 'nvim-telescope/telescope-media-files.nvim', dependencies = { 'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim'} },
-  {
-    'nvim-telescope/telescope.nvim',
+  { 'nvim-telescope/telescope.nvim',
     dependencies = { 'nvim-lua/plenary.nvim', 'BurntSushi/ripgrep' },
     config = function()
       require('telescope').setup({

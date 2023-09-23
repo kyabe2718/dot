@@ -1,16 +1,19 @@
 #! /usr/bin/env zsh
 # zmodload zsh/zprof # to profile
 
+# echo "SCRIPT_PATH: ${(%):-%N}" # man zshmisc
+SCRIPT_DIR=$(cd $(dirname $(readlink -f ${(%):-%N})); pwd -P)
+export DOTFILES_HOME=$(cd $(dirname $(readlink -f ${(%):-%N}))/..; pwd -P)
+
 export LANG=ja_JP.UTF-8
 export PATH=$HOME/.local/bin:$PATH
 [ -z "$XDG_CONFIG_HOOME" ] && export XDG_CONFIG_HOME=$HOME/.config
+export PATH=$DOTFILES_HOME/bin:$PATH
 
 case ${OSTYPE} in
   darwin*) [ -z "${LSCOLORS}" ] && export LSCOLORS=gxfxcxdxbxegedabagacad ;;
   linux*) [ -z "${LS_COLORS}" ] && eval $(dircolors) ;;
 esac
-
-DOTFILES_HOME=$(cd $(dirname $(readlink -f $HOME/.zshrc))/..; pwd -P)
 
 # autoload ... [name]
 # Search the function from $FPATH and load it
@@ -59,11 +62,11 @@ alias -s {gz,tgz,zip,lzh,bz2,tbz,Z,tar,arj,xz}=aunpack
 alias -s {png,jpg,bmp,pdf,PNG,JPG,BMP,PDF,mkv}=xdg-open
 alias -s {com,jp,html}=google-chrome
 
-source $DOTFILES_HOME/zsh/history_config.sh
-source $DOTFILES_HOME/zsh/prompt_config.sh
-source $DOTFILES_HOME/zsh/completion_config.sh
-source $DOTFILES_HOME/zsh/vi_copy_paste.sh
-source $DOTFILES_HOME/zsh/smart_navigator.sh
+source $SCRIPT_DIR/scripts/history_config.sh
+source $SCRIPT_DIR/scripts/prompt_config.sh
+source $SCRIPT_DIR/scripts/completion_config.sh
+source $SCRIPT_DIR/scripts/vi_copy_paste.sh
+source $SCRIPT_DIR/scripts/smart_navigator.sh
 
 [ -e $HOME/.zshrc.local ] &&  source $HOME/.zshrc.local
 [ -e $HOME/.env.sh ] &&  source $HOME/.env.sh
