@@ -40,9 +40,9 @@ alias vi='vim --noplugin'
 alias vim='nvim'
 alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1'
 alias d='du -h -d1'
-alias open='xdg-open'
 alias grep='grep --color=auto'
 alias ggrep='grep -RnE1'
+[[ -n "$WSL_DISTRO_NAME" ]] && alias open='explorer.exe' || alias open='xdg-open'
 
 case ${OSTYPE} in
     darwin*) alias ls='ls -G';;

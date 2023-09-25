@@ -1,19 +1,25 @@
 #/usr/bin/env bash
 
-if [ -z ${DOTFILES_HOME:+} ]; then
-    DOTFILES_HOME=$(cd $(dirname $(readlink -f $0))/..; pwd -P)
-fi
-source $DOTFILES_HOME/lib/utils.sh
-
-function main() {
+main() {
     if type zsh >/dev/null 2>&1; then
         echo "zsh is already installed"
         return
     fi
-    case "$(get_platform)" in
-        ubuntu) sudo apt install -y zsh ;;
-        *) echo "failed to install tmux: Unknown platform $(get_platform)"; exit 1 ;;
-    esac
+
+    if [[ ${OS_TYPE} = linux-gnu* ]]; then
+        [ -e /etc/os-release ] && os_release='/etc/os-release' || os_release='/usr/lib/os-release'
+        . ${os_release}
+        if [[ $ID == "ubuntu" ]]; then
+            sudo apt install -y zsh ;;
+        else
+            echo "Unknown Platform: $ID"
+            return
+        fi
+    else
+        echo "Unknown Platform: $OS_TYPE"
+        return
+    fi
+
     chsh -s $(which zsh)
 }
 
