@@ -95,8 +95,8 @@ main() {
     if [[ "$(uname -r)" == *microsoft-*WSL* ]]; then
         WINDOWS_HOME=$(cmd.exe /C "echo %userprofile%" 2> /dev/null |\
             tr -d '\r' | sed -e 's/C:/\/mnt\/c/' -e 's/\\/\//g')
-        ln -snfv $WINDOWS_HOME/Downloads $HOME/Downloads
-        ln -snfv $WINDOWS_HOME/Documents $HOME/Documents
+        [[ -e $WINDOWS_HOME/Downloads ]] || ln -snv $WINDOWS_HOME/Downloads $HOME/Downloads
+        [[ -e $WINDOWS_HOME/Documents ]] || ln -snv $WINDOWS_HOME/Documents $HOME/Documents
     fi
 }
 
