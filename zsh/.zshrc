@@ -42,7 +42,18 @@ alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1'
 alias d='du -h -d1'
 alias grep='grep --color=auto'
 alias ggrep='grep -RnE1'
-[[ -n "$WSL_DISTRO_NAME" ]] && alias open='explorer.exe' || alias open='xdg-open'
+
+wsl_open() {
+    if [ $# -eq 0 ]; then
+        explorer.exe .
+    elif [ $# -eq 1 ]; then
+        explorer.exe "$@"
+    else
+        cmd.exe /c start $(wslpath -w ${path_name}) 2> /dev/null
+    fi
+}
+
+[[ -n "$WSL_DISTRO_NAME" ]] && alias open='wsl_open' || alias open='xdg-open'
 
 case ${OSTYPE} in
     darwin*) alias ls='ls -G';;

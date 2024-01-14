@@ -20,7 +20,7 @@ clean() {
 }
 
 stop() {
-  docker stop --signal sigint ${CONTAINER_NAME}
+  docker stop ${CONTAINER_NAME}
 }
 
 run() {
@@ -31,7 +31,7 @@ run() {
       --user $USER --group-add sudo \
       --name ${CONTAINER_NAME} --detach \
       ${AI_IMAGE_NAME} \
-      /bin/bash -c "while true; do sleep 10; done"
+      /bin/bash -c "while true; do sleep 1; done"
   fi
 
   (docker container ls -q --filter name=${CONTAINER_NAME} | grep -q .) ||\

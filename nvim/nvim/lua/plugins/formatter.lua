@@ -20,7 +20,6 @@ return {
       filetype = {
         c   = { require('formatter.filetypes.c').clangformat },
         cpp = { require('formatter.filetypes.cpp').clangformat },
-        -- lua = { require('formatter.filetypes.lua').stylua },
         lua = {
           exe = "stylua",
           args = {
