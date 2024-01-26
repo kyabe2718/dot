@@ -6,7 +6,7 @@ main() {
         return
     fi
 
-    if [[ ${OS_TYPE} = linux-gnu* ]]; then
+    if [[ ${OSTYPE} = linux-gnu* ]]; then
         [ -e /etc/os-release ] && os_release='/etc/os-release' || os_release='/usr/lib/os-release'
         . ${os_release}
         if [[ $ID == "ubuntu" ]]; then
@@ -16,7 +16,7 @@ main() {
             return
         fi
     else
-        echo "Unknown Platform: $OS_TYPE"
+        echo "Unknown Platform: ${OSTYPE}"
         return
     fi
 

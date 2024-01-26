@@ -5,7 +5,7 @@ verlt() {
 }
 
 install_tmux() {
-    if [[ ${OS_TYPE} = linux-gnu* ]]; then
+    if [[ ${OSTYPE} = linux-gnu* ]]; then
         [ -e /etc/os-release ] && os_release='/etc/os-release' || os_release='/usr/lib/os-release'
         . ${os_release}
         if [[ $ID == "ubuntu" ]]; then
@@ -16,7 +16,7 @@ install_tmux() {
             exit 1
         fi
     else
-        echo "Unknown Platform: ${OS_TYPE}"
+        echo "Unknown Platform: ${OSTYPE}"
         exit 1
     fi
 
