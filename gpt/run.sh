@@ -8,12 +8,19 @@ build() {
   docker build -t ${AI_IMAGE_NAME} ${SCRIPT_DIR}
 }
 
+build-no-cache() {
+  docker build --no-cache -t ${AI_IMAGE_NAME} ${SCRIPT_DIR}
+}
+
 clean() {
+  stop
+  docker rm ${CONTAINER_NAME}
   docker rmi ${AI_IMAGE_NAME}
+  docker builder prune -f
 }
 
 stop() {
-  docker stop --signal sigint ${CONTAINER_NAME}
+  docker stop ${CONTAINER_NAME}
 }
 
 run() {
@@ -24,7 +31,7 @@ run() {
       --user $USER --group-add sudo \
       --name ${CONTAINER_NAME} --detach \
       ${AI_IMAGE_NAME} \
-      /bin/bash -c "while true; do sleep 10; done"
+      /bin/bash -c "while true; do sleep 1; done"
   fi
 
   (docker container ls -q --filter name=${CONTAINER_NAME} | grep -q .) ||\
@@ -36,19 +43,20 @@ run() {
 }
 
 main() {
-    cmd="chatgpt-cli"; args=""
+    cmd="/.chatgpt-cli/bin/chatgpt-cli"; args=""
     MOUNT="--mount type=bind,source=$PWD,target=/workspace"
     USER="user"
     while [[ $# -gt 0 ]]; do
         case "$1" in
             -h|--help)  usage; exit 0 ;;
             -b|--build) build; exit 0 ;;
+            --build-no-cache) build-no-cache; exit 0 ;;
             --stop)     stop;  exit 0 ;;
             --clean)    clean; exit 0 ;;
             --cmd)      shift; cmd="$1";;
             --root)     USER="root";;
-            -c|--cli)          cmd="chatgpt-cli"; MOUNT="" ;;
-            -i|--interpreter)  cmd="interpreter";;
+            -c|--cli)          cmd="/.chatgpt-cli/bin/chatgpt-cli"; MOUNT="" ;;
+            -i|--interpreter)  cmd="/.open-interpreter/bin/interpreter";;
             -y|--yes)          args="$args --yes" ;;
             --no-mount)        MOUNT="" ;;
             --model)    shift; args="$args --model $1";;
@@ -59,6 +67,7 @@ main() {
         esac
         shift
     done
+
     run "$cmd$args"
 }
 
@@ -75,6 +84,7 @@ Usage: $(basename $0) [OPTIONS] [--] [ARGS...]
   --root                Run as root.
   --cmd CMD             Command to run in docker container.
   -b, --build           Build docker image.
+  --build-no-cache      Build docker image without cache.
   --clean               Clean docker image.
   --stop                Stop docker container.
   --                    Pass the remaining arguments to the command.
