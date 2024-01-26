@@ -10,7 +10,7 @@ main() {
         [ -e /etc/os-release ] && os_release='/etc/os-release' || os_release='/usr/lib/os-release'
         . ${os_release}
         if [[ $ID == "ubuntu" ]]; then
-            sudo apt install -y zsh ;;
+            sudo apt install -y zsh
         else
             echo "Unknown Platform: $ID"
             return
