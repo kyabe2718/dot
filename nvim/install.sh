@@ -1,16 +1,16 @@
 #! /usr/bin/env bash
 
 install_nvim(){
-    if [[ ${OS_TYPE} = linux-gnu* ]]; then
+    if [[ ${OSTYPE} = linux-gnu* ]]; then
         echo "Try to install nvim to $HOME/.local/bin"
         mkdir -p $HOME/.local/bin
         curl -o $HOME/.local/bin/nvim -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
         chmod u+x $HOME/.local/bin/nvim
-    elif [[ ${OS_TYPE} = darwin* ]]; then
+    elif [[ ${OSTYPE} = darwin* ]]; then
         echo "Try to install nvim using brew"
         brew install nvim
     else
-        echo "Failed to install nvim: Unknown Platform: ${OS_TYPE}"
+        echo "Failed to install nvim: Unknown Platform: ${OSTYPE}"
     fi
 }
 
