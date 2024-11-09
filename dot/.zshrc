@@ -1,14 +1,44 @@
 #! /usr/bin/env zsh
+
 # zmodload zsh/zprof # to profile
 
 export LANG=ja_JP.UTF-8
 export PATH=$HOME/.local/bin:$PATH
-[ -z "$XDG_CONFIG_HOOME" ] && export XDG_CONFIG_HOME=$HOME/.config
+[ -z "$XDG_CONFIG_HOME" ] && export XDG_CONFIG_HOME=$HOME/.config
 
 case ${OSTYPE} in
   darwin*) [ -z "${LSCOLORS}" ] && export LSCOLORS=gxfxcxdxbxegedabagacad ;;
   linux*) [ -z "${LS_COLORS}" ] && eval $(dircolors) ;;
 esac
+
+
+## Mount
+mount_points=(
+    "$HOME/.cache":"/opt/home/kimura-g/.cache"
+    "$HOME/.cargo":"/opt/home/kimura-g/.cargo"
+    "$HOME/.rustup":"/opt/home/kimura-g/.rustup"
+)
+function rebind_if_nfs() {
+    local src_dir="$1"
+    local dest_dir="$2"
+
+    mkdir -p "$src_dir"
+    local fs_type=$(df -T "$src_dir" | awk 'NR==2 {print $2}')
+
+    if [[ $fs_type == nfs* ]]; then
+        mkdir -p $dest_dir
+        echo "$src_dir is mounted by $fs_type. mount: $src_dir -> $dest_dir"
+        sudo mount --bind "$dest_dir" "$src_dir"
+    fi
+}
+
+if [[ $(hostname) != takaoka* ]]; then
+    for entry in ${mount_points[@]}; do
+        IFS=":" read -r src_dir dest_dir <<< "$entry"
+        rebind_if_nfs "$src_dir" "$dest_dir"
+    done
+fi
+
 
 DOTFILES_HOME=$(cd $(dirname $(readlink -f $HOME/.zshrc))/..; pwd -P)
 
@@ -68,4 +98,8 @@ source $DOTFILES_HOME/zsh/smart_navigator.sh
 [ -e $HOME/.zshrc.local ] &&  source $HOME/.zshrc.local
 [ -e $HOME/.env.sh ] &&  source $HOME/.env.sh
 
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
 # zprof # to profile
+
