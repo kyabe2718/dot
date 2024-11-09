@@ -2,15 +2,19 @@
 
 # zmodload zsh/zprof # to profile
 
+# echo "SCRIPT_PATH: ${(%):-%N}" # man zshmisc
+SCRIPT_DIR=$(cd $(dirname $(readlink -f ${(%):-%N})); pwd -P)
+export DOTFILES_HOME=$(cd $(dirname $(readlink -f ${(%):-%N}))/..; pwd -P)
+
 export LANG=ja_JP.UTF-8
 export PATH=$HOME/.local/bin:$PATH
 [ -z "$XDG_CONFIG_HOME" ] && export XDG_CONFIG_HOME=$HOME/.config
+export PATH=$DOTFILES_HOME/bin:$PATH
 
 case ${OSTYPE} in
   darwin*) [ -z "${LSCOLORS}" ] && export LSCOLORS=gxfxcxdxbxegedabagacad ;;
   linux*) [ -z "${LS_COLORS}" ] && eval $(dircolors) ;;
 esac
-
 
 ## Mount
 mount_points=(
@@ -67,9 +71,20 @@ alias vi='vim --noplugin'
 alias vim='nvim'
 alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1'
 alias d='du -h -d1'
-alias open='xdg-open'
 alias grep='grep --color=auto'
 alias ggrep='grep -RnE1'
+
+wsl_open() {
+    if [ $# -eq 0 ]; then
+        explorer.exe .
+    elif [ $# -eq 1 ]; then
+        explorer.exe "$@"
+    else
+        cmd.exe /c start $(wslpath -w ${path_name}) 2> /dev/null
+    fi
+}
+
+[[ -n "$WSL_DISTRO_NAME" ]] && alias open='wsl_open' || alias open='xdg-open'
 
 case ${OSTYPE} in
     darwin*) alias ls='ls -G';;
@@ -89,11 +104,11 @@ alias -s {gz,tgz,zip,lzh,bz2,tbz,Z,tar,arj,xz}=aunpack
 alias -s {png,jpg,bmp,pdf,PNG,JPG,BMP,PDF,mkv}=xdg-open
 alias -s {com,jp,html}=google-chrome
 
-source $DOTFILES_HOME/zsh/history_config.sh
-source $DOTFILES_HOME/zsh/prompt_config.sh
-source $DOTFILES_HOME/zsh/completion_config.sh
-source $DOTFILES_HOME/zsh/vi_copy_paste.sh
-source $DOTFILES_HOME/zsh/smart_navigator.sh
+source $SCRIPT_DIR/scripts/history_config.sh
+source $SCRIPT_DIR/scripts/prompt_config.sh
+source $SCRIPT_DIR/scripts/completion_config.sh
+source $SCRIPT_DIR/scripts/vi_copy_paste.sh
+source $SCRIPT_DIR/scripts/smart_navigator.sh
 
 [ -e $HOME/.zshrc.local ] &&  source $HOME/.zshrc.local
 [ -e $HOME/.env.sh ] &&  source $HOME/.env.sh

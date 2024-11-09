@@ -1,19 +1,25 @@
 #! /usr/bin/env bash
 
-set -u
+verlt() {
+    [ "$1" = "$2" ] && return 1 || [  "$1" = "`echo -e \"$1\n$2\" | sort -V | head -n1`" ]
+}
 
-if [ -z ${DOTFILES_HOME:+} ]; then
-    DOTFILES_HOME=$(cd $(dirname $(readlink -f $0))/..; pwd -P)
-fi
-source $DOTFILES_HOME/lib/utils.sh
-
-function install_tmux() {
-    if !(type pkg-config > /dev/null 2>&1); then
-        case "$(get_platform)" in
-            ubuntu) sudo apt install pkg-config ;;
-            *) echo "failed to install pkg-config: Unknown platform $(get_platform)" ;;
-        esac
+install_tmux() {
+    if [[ ${OSTYPE} = linux-gnu* ]]; then
+        [ -e /etc/os-release ] && os_release='/etc/os-release' || os_release='/usr/lib/os-release'
+        . ${os_release}
+        if [[ $ID == "ubuntu" ]]; then
+            sudo apt install -y \
+                pkg-config gcc automake build-essential flex bison libevent-dev libncurses-dev
+        else
+            echo "Unknown Platform: $ID"
+            exit 1
+        fi
+    else
+        echo "Unknown Platform: ${OSTYPE}"
+        exit 1
     fi
+
     BUILD_DIR=/tmp/tmux
     git clone https://github.com/tmux/tmux.git -b 3.3a $BUILD_DIR
     cd $BUILD_DIR
@@ -21,7 +27,7 @@ function install_tmux() {
     ./configure --prefix $HOME/.local && make install
 }
 
-function check_tmux(){
+check_tmux(){
     if [ ! type tmux > /dev/null 2>&1 ]; then
         echo "tmux is not installed."
         return 1
@@ -37,17 +43,16 @@ function check_tmux(){
     fi
 }
 
-function main(){
+main(){
     if !(check_tmux); then
-        case "$(get_platform)" in
-            ubuntu) install_tmux ;;
-            *) echo "failed to install tmux: Unknown platform $(get_platform)" ;;
-        esac
+        install_tmux
     fi
 
     echo "Create Symlink..."
     mkdir -p $HOME/.tmux
-    ln -sfv $DOTFILES_HOME/tmux/config $HOME/.tmux/
+
+    SCRIPT_DIR=$(cd $(dirname $(readlink -f $0)); pwd -P)
+    ln -sfv $SCRIPT_DIR/config $HOME/.tmux/
 }
 
 main
