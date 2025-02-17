@@ -24,7 +24,8 @@ vim.keymap.set('n', '<A-Left>', '<C-o>')
 vim.keymap.set('n', '<A-Right>', '<C-i>')
 
 -- nvim-tree
-vim.keymap.set('n', '<A-1>', '<cmd>:NvimTreeToggle<CR>')
+-- vim.keymap.set('n', '<A-1>', '<cmd>:NvimTreeToggle<CR>')
+vim.keymap.set('n', '<M-1>', function() vim.cmd('NvimTreeToggle') end)
 
 local getjumplist = function()
   print(vim.inspect(vim.fn.getjumplist(1, 1)))

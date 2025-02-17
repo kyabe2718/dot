@@ -13,7 +13,6 @@ return {
         ensure_installed = {
           "clangd",
           "rust_analyzer",
-          "bashls",
           "lua_ls",
           "pylsp"
         },
